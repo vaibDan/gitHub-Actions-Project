@@ -1,0 +1,19 @@
+{
+  "name": "github-actions-resume-project",
+  "version": "1.0.0",
+  "description": "A sample Node.js project to demonstrate a full CI/CD pipeline with GitHub Actions.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest"
+  },
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
+  }
+}
