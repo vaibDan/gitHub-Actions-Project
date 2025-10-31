@@ -1,0 +1,19 @@
+name: Node.js Setup and Test
+description: Sets up Node.js installs dependency and runs tests.
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+
+    - name: Run tests
+      run: npm test
+      shell: bash
