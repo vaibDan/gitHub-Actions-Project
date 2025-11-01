@@ -13,7 +13,7 @@ env:
   ECR_REPOSITORY: 'my-ecr-repo'
   ECS_CLUSTER: 'my-ecs-cluster'
   ECS_SERVICE: 'my-ecs-service'
-  ECS_TASK_DEFINITION: 'my-task-definition.json'
+  ECS_TASK_DEFINITION: 'my-task-definition'
   CONTAINER_NAME: 'my-container'
 
 permissions:
