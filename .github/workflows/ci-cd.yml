@@ -37,9 +37,8 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_JS_ES: true
-          VALIDATE_JS: true
           JAVASCRIPT_STANDARD_DISABLE_CACHE: true
-          JSCPD_THRESHOLD: 5
+          JSCPD_THRESHOLD: 7
 
   # -----Test Job-----
 

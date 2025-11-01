@@ -1,14 +1,19 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import { defineConfig } from 'eslint/config';
+const { defineConfig } = require('eslint/config');
+const globals = require('globals');
 
-export default defineConfig([
+/*
+ * CommonJS ESLint configuration.
+ * Using a .cjs file avoids parser errors about `import`/`export` when tools
+ * interpret config files as CommonJS. This config keeps the stricter rules
+ * previously added but in a format that will not cause the "sourceType" parse error.
+ */
+
+module.exports = defineConfig([
   {
-    files: ['**/*.{js,mjs,cjs}'],
-    plugins: { js },
+    files: ['**/*.{js,cjs}'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'commonjs',
+      sourceType: 'module', // allow project files to use ESM when appropriate
       globals: {
         ...globals.node,
         ...globals.jest,
