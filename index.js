@@ -7,20 +7,29 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP', timestamp: new Date().toISOString() });
+  res.status(200).json({
+    status: 'UP',
+    timestamp: new Date().toISOString(),
+  });
 });
 
 app.get('/api/users', (req, res) => {
   const users = [
-    { id: 1, name: 'John Doe' },
-    { id: 2, name: 'Jane Doe' },
+    {
+      id: 1,
+      name: 'John Doe',
+    },
+    {
+      id: 2,
+      name: 'Jane Doe',
+    },
   ];
   res.status(200).json(users);
 });
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.info(`Server is running on port ${PORT}`);
   });
 }
 

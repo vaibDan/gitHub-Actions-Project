@@ -2,22 +2,36 @@ const request = require('supertest');
 const app = require('./index'); // Import the Express app
 
 describe('API Endpoints', () => {
-  it('GET / should return Hello, World!', async () => {
-    const res = await request(app).get('/');
-    expect(res.statusCode).toEqual(200);
-    expect(res.text).toBe('Hello, World!');
-  });
+  const endpoints = [
+    {
+      path: '/',
+      expectedStatus: 200,
+      validateResponse: (res) => {
+        expect(res.text).toBe('Hello, World!');
+      },
+    },
+    {
+      path: '/health',
+      expectedStatus: 200,
+      validateResponse: (res) => {
+        expect(res.body.status).toBe('UP');
+      },
+    },
+    {
+      path: '/api/users',
+      expectedStatus: 200,
+      validateResponse: (res) => {
+        expect(Array.isArray(res.body)).toBe(true);
+        expect(res.body.length).toBeGreaterThan(0);
+      },
+    },
+  ];
 
-  it('GET /health should return status UP', async () => {
-    const res = await request(app).get('/health');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.status).toBe('UP');
-  });
-
-  it('GET /api/users should return a list of users', async () => {
-    const res = await request(app).get('/api/users');
-    expect(res.statusCode).toEqual(200);
-    expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body.length).toBeGreaterThan(0);
+  endpoints.forEach(({ path, expectedStatus, validateResponse }) => {
+    it(`GET ${path} should return expected response`, async () => {
+      const res = await request(app).get(path);
+      expect(res.statusCode).toEqual(expectedStatus);
+      validateResponse(res);
+    });
   });
 });
