@@ -19,7 +19,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 # Install curl for healthcheck
-RUN apk add --no-cache curl=8.7.1-r0
+RUN apk add --no-cache curl
 
 # Copy dependencies from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
