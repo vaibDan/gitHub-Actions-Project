@@ -9,12 +9,12 @@ on:
       - main
 
 env:
-  AWS_REGION: "us-east-1"
-  ECR_REPOSITORY: "my-ecr-repo"
-  ECS_CLUSTER: "my-ecs-cluster"
-  ECS_SERVICE: "my-ecs-service"
-  ECS_TASK_DEFINITION: "my-task-definition.json"
-  CONTAINER_NAME: "my-container"
+  AWS_REGION: 'us-east-1'
+  ECR_REPOSITORY: 'my-ecr-repo'
+  ECS_CLUSTER: 'my-ecs-cluster'
+  ECS_SERVICE: 'my-ecs-service'
+  ECS_TASK_DEFINITION: 'my-task-definition.json'
+  CONTAINER_NAME: 'my-container'
 
 permissions:
   contents: read
@@ -37,9 +37,11 @@ jobs:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_JS_ES: true
-  
+          VALIDATE_JS: true
+          JAVASCRIPT_STANDARD_DISABLE_CACHE: true
+          JSCPD_THRESHOLD: 5
 
-# -----Test Job-----
+  # -----Test Job-----
 
   test:
     name: Test Application
@@ -52,8 +54,7 @@ jobs:
       - name: Setup and Run Tests
         uses: ./.github/actions/test
 
-
-# -----Build and Push a Docker Image to ECR-----
+  # -----Build and Push a Docker Image to ECR-----
 
   build:
     name: Build and Push Docker Image
@@ -68,7 +69,7 @@ jobs:
 
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v5.1.0
-        with:          
+        with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
@@ -76,7 +77,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name:  Build, tag, and push image to Amazon ECR
+      - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -89,7 +90,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-# ------Deploy the new Image to ECS-------
+  # ------Deploy the new Image to ECS-------
 
   deploy:
     name: Deploy to AWS ECS
@@ -104,7 +105,7 @@ jobs:
 
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v5.1.0
-        with:          
+        with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
@@ -112,7 +113,7 @@ jobs:
         id: registry
         run: |
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          echo "registry=${ACCOUNT_ID}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
+          echo "registry=${ACCOUNT_ID}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> "$GITHUB_OUTPUT"
 
       - name: Download existing ECS task definition (from service)
         run: |
@@ -133,4 +134,4 @@ jobs:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE }}
           cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true 
+          wait-for-service-stability: true
