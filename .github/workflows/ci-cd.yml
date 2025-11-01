@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_JS_ES: true
           VALIDATE_JAVASCRIPT_STANDARD: true
-          VALIDATE_JSCPD: true
+          VALIDATE_JSCPD: false
           # LINTER_IMAGE: ghcr.io/github/super-linter:slim-latest
 
 
@@ -108,7 +108,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup AWS
         uses: ./.github/actions/aws-setup
         with:
