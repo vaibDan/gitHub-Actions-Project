@@ -30,19 +30,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+
       - name: Run Super-Linter
-        uses: github/super-linter@v7
-        # Temporarily allow linter step to not fail the whole job while we
-        # investigate/fix validation errors. Remove this after resolving the
-        # root cause (or set to false and fix specific validators).
-        continue-on-error: true
+        uses: github/super-linter@v6
+      #   # Temporarily allow linter step to not fail the whole job while we
+      #   # investigate/fix validation errors. Remove this after resolving the
+      #   # root cause (or set to false and fix specific validators).
+      #   # continue-on-error: true
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_JS_ES: true
-          JAVASCRIPT_STANDARD_DISABLE_CACHE: true
-          JSCPD_THRESHOLD: 7
+          VALIDATE_JAVASCRIPT_STANDARD: true
+          VALIDATE_JSCPD: true
+          # LINTER_IMAGE: ghcr.io/github/super-linter:slim-latest
+
 
   # -----Test Job-----
 
@@ -67,13 +70,10 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v5.1.0
+      - name: Setup AWS
+        uses: ./.github/actions/aws-setup
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to AWS ECR
@@ -103,13 +103,10 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials using OIDC
-        uses: aws-actions/configure-aws-credentials@v5.1.0
+      - name: Setup AWS
+        uses: ./.github/actions/aws-setup
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Determine ECR registry

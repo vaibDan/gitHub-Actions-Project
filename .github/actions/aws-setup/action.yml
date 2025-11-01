@@ -1,0 +1,22 @@
+name: 'AWS Setup'
+description: 'Checkout code and configure AWS credentials using OIDC'
+
+inputs:
+  aws-role-arn:
+    description: 'AWS IAM Role ARN to assume'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials using OIDC
+      uses: aws-actions/configure-aws-credentials@v5.1.0
+      with:
+        role-to-assume: ${{ inputs.aws-role-arn }}
+        aws-region: ${{ inputs.aws-region }}
