@@ -3,7 +3,7 @@ name: CI/CD Pipeline to AWS ECS
 on:
   push:
     branches:
-      - main
+      # - main
       - fixing-linter
   pull_request:
     branches:
@@ -37,12 +37,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Create Inline Dockerfile for Super-Linter
+        run: |
+          cat <<EOF > Dockerfile.super-linter
+          FROM github/super-linter:slim-v5
+          COPY . /tmp/lint
+          EOF
+
       - name: Run Super-linter with Docker Cache
         uses: docker/build-push-action@v5
         with:
-          context: |
-            FROM github/super-linter:slim-v5
-            COPY . /tmp/lint
+          context: .
+          file: ./Dockerfile.super-linter
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
