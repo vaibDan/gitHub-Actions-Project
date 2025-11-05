@@ -1,14 +1,14 @@
 name: CI/CD Pipeline to AWS ECS
 
-on: 
-  workflow_dispatch:
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
+      - testing-job
+  pull_request:
+    branches:
+      - main
+      - testing-job
 
 env:
   AWS_REGION: 'us-east-1'
