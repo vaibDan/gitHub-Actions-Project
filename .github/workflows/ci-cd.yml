@@ -116,13 +116,12 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Create Build Report
-        env:
-          IMAGE_URI: ${{ steps.build-image.outputs.image }}
         run: |
+          IMAGE_NAME=$(echo '${{ steps.build-image.outputs.metadata }}' | jq -r '.["docker.io/library/image.tags"][0]')
           mkdir -p reports
           echo "Build Date: $(date)" > reports/build-summary.txt
           echo "Git Commit SHA: ${{ github.sha }}" >> reports/build-summary.txt
-          echo "Pushed Docker Image: $IMAGE_URI" >> reports/build-summary.txt
+          echo "Pushed Docker Image: $IMAGE_NAME" >> reports/build-summary.txt
 
       - name: Upload Build Report Artifact
         uses: actions/upload-artifact@v4
