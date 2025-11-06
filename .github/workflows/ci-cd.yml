@@ -126,8 +126,23 @@ jobs:
           context: .
           push: true
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          outputs: type=image,name=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Create Build Report
+        run: |
+          mkdir -p reports
+          echo "Build Date: $(date)" > reports/build-summary.txt
+          echo "Git Commit SHA: ${{ github.sha }}" >> reports/build-summary.txt
+          echo "Pushed Docker Image: ${{ steps.build-image.outputs.image }}" >> reports/build-summary.txt
+
+      - name: Upload Build Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-report
+          path: reports/build-summary.txt
+          retention-days: 30
 
   # ------Deploy the new Image to ECS-------
 
