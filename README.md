@@ -2,6 +2,7 @@
 
 ![CI/CD Pipeline](https://github.com/vaibDan/gitHub-Actions-Project/actions/workflows/ci-cd.yml/badge.svg)
 
+
 This repository serves as a comprehensive demonstration of a modern, production-grade CI/CD pipeline for a Node.js (Express) application using GitHub Actions and AWS. The entire workflow is automated, following best practices for validation, testing, containerization, and secure cloud deployment.
 
 ## 🚀 Project Overview
