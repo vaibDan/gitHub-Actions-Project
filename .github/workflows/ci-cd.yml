@@ -62,21 +62,6 @@ jobs:
             VALIDATE_YAML=true
             VALIDATE_DOCKERFILE_HADOLINT=true
 
-      # - name: Run Super-Linter
-      #   uses: github/super-linter@v6
-      # #   # Temporarily allow linter step to not fail the whole job while we
-      # #   # investigate/fix validation errors. Remove this after resolving the
-      # #   # root cause (or set to false and fix specific validators).
-      # #   # continue-on-error: true
-      #   env:
-      #     VALIDATE_ALL_CODEBASE: false
-      #     DEFAULT_BRANCH: main
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     VALIDATE_JS_ES: true
-      #     VALIDATE_JAVASCRIPT_STANDARD: true
-      #     # LINTER_IMAGE: ghcr.io/github/super-linter:slim-latest
-
-
   # -----Test Job-----
 
   test:
@@ -131,11 +116,13 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Create Build Report
+        env:
+          IMAGE_URI: ${{ steps.build-image.outputs.image }}
         run: |
           mkdir -p reports
           echo "Build Date: $(date)" > reports/build-summary.txt
           echo "Git Commit SHA: ${{ github.sha }}" >> reports/build-summary.txt
-          echo "Pushed Docker Image: ${{ steps.build-image.outputs.image }}" >> reports/build-summary.txt
+          echo "Pushed Docker Image: $IMAGE_URI" >> reports/build-summary.txt
 
       - name: Upload Build Report Artifact
         uses: actions/upload-artifact@v4
